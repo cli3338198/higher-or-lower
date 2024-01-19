@@ -138,6 +138,8 @@ class Deck {
   constructor(deckBuilder) {
     this.deckBuilder = deckBuilder;
   }
+
+  async initializeDeck() {}
 }
 
 class Player {}
