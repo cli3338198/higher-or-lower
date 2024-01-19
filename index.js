@@ -3,7 +3,7 @@ const target = document.getElementById("target");
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 const API = "https://www.deckofcardsapi.com/api/deck/new/";
-// Response:
+
 // {
 //     "success": true,
 //     "deck_id": "3p40paa87x90",
@@ -46,11 +46,9 @@ const API = "https://www.deckofcardsapi.com/api/deck/new/";
 // }
 
 class DeckOfCardsAPI {
-  constructor() {
+  constructor(numCards) {
     this.deck_id = "";
-    // this.initializeDeck();
-    // cannot initialize here
-    //
+    this.remainingCards = numCards;
   }
 
   async initializeDeck() {
@@ -82,8 +80,11 @@ class DeckOfCardsAPI {
     }
   }
 
-  async drawCards(count = 2) {
+  async drawCards(count = 1) {
     if (this.deck_id !== "") {
+      if (this.remainingCards <= 0) {
+        throw new Error("Error drawing cards"); // TODO: fix this!, want this to bubble up
+      }
       try {
         const response = await fetch(
           `https://www.deckofcardsapi.com/api/deck/${this.deck_id}/draw/?count=${count}`
@@ -122,8 +123,13 @@ class CardFactory {
   }
 }
 
+/**
+ * Use builder pattern to create decks of different difficulties
+ * Pass the deckbuilder to deck
+ */
 class DeckBuilder {
-  constructor(cardFactory) {
+  constructor(cardFactory, numCards) {
+    this.numCards = numCards;
     this.cards = [];
     this.cardFactory = cardFactory;
   }
@@ -134,16 +140,45 @@ class DeckBuilder {
   }
 }
 
+/**
+ * Pass the deck to game
+ */
 class Deck {
-  constructor(deckBuilder) {
+  constructor(deckBuilder, deckAPI) {
     this.deckBuilder = deckBuilder;
+    this.deckAPI = deckAPI;
   }
 
-  async initializeDeck() {}
+  async initializeDeck() {
+    try {
+      await this.deckAPI.initializeDeck();
+      const card = await this.deckAPI.drawCards();
+      console.log(card);
+      // limit card drawing
+    } catch (err) {
+      // could have error here from initializing or drawing cards
+      console.log(err.message);
+    }
+  }
 }
 
-class Player {}
+class Player {
+  constructor() {
+    this.score = 0;
+  }
+}
 
-class Game {}
+class Game {
+  constructor() {}
+}
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+(async () => {
+  const difficulty = 2;
+  const deckAPI = new DeckOfCardsAPI(difficulty);
+  await deckAPI.initializeDeck();
+  const cardFactory = new CardFactory();
+  const deckBuilder = new DeckBuilder(cardFactory, difficulty);
+  const deck = new Deck(deckBuilder, deckAPI);
+})();

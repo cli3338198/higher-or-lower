@@ -65,3 +65,30 @@ game.players.forEach((player) =>
   console.log(`${player.name}: ${player.score}`)
 );
 ```
+
+## How to Play
+
+1. **Game Start:**
+
+   - The game begins with the presentation of a starting card, usually drawn from a standard deck of playing cards.
+
+2. **Make Your Prediction:**
+
+   - Players must decide whether the next card will be higher or lower than the current card.
+
+3. Place Your Bet:
+
+   - After making a prediction, players place their bets on whether the next card will be higher or lower.
+
+4. **Reveal the Next Card:**
+
+   - The next card is revealed, and the result is determined:
+     - If the prediction is correct, players win the round.
+     - If the prediction is incorrect, players lose the round.
+
+5. **Continue or End the Game:**
+   - Players can choose to continue and make predictions for subsequent cards or end the game after any round.
+
+## Objective
+
+The objective of the Higher or Lower game is to make correct predictions about whether the next card in the sequence will be higher or lower than the current one. The game tests players' intuition and decision-making skills as they try to achieve a winning streak. Whether played for fun or as a competitive challenge, the goal is to enjoy the thrill of predicting the outcome and experiencing the excitement of each card flip.
